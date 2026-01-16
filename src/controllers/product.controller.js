@@ -37,3 +37,10 @@ exports.deleteProduct = async (req, res) => {
   await ProductService.deleteProduct(req.params.id);
   res.status(204).send();
 };
+
+exports.bulkCreateProducts = async (req, res) => {
+  const result = await ProductService.bulkCreateProducts(req.body.products);
+  res.status(201).json(result);
+};
+
+

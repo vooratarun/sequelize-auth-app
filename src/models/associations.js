@@ -1,7 +1,8 @@
 module.exports = (db) => {
   const { User, Role, UserRole, 
          Address, Product, Category, ProductCategory,
-    Cart, CartItem, Order, OrderItem, Payment, Inventory
+    Cart, CartItem, Order, OrderItem, Payment, Inventory,
+    RolePermission, Permission
   } = db;
 
   // User ↔ Role (Many-to-Many)
@@ -40,4 +41,7 @@ module.exports = (db) => {
 
   Product.hasOne(Inventory);
   Inventory.belongsTo(Product);
+
+  Role.belongsToMany(Permission, { through: RolePermission });
+  Permission.belongsToMany(Role, { through: RolePermission });
 };

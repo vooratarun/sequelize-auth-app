@@ -178,8 +178,54 @@ static async updateProduct(id, data) {
       { where: { id } }
     );
   }
+
+static async bulkCreateProducts(products) {
+  const results = [];
+
+  for (const productData of products) {
+    try {
+      await sequelize.transaction(async (tx) => {
+        const product = await Product.create(
+          {
+            name: productData.name,
+            price: productData.price,
+            description: productData.description,
+            status: "ACTIVE"
+          },
+          { transaction: tx }
+        );
+
+        await Inventory.create(
+          {
+            product_id: product.id,
+            stock: productData.stock
+          },
+          { transaction: tx }
+        );
+
+        await product.setCategories(
+          productData.categoryIds,
+          { transaction: tx }
+        );
+
+        results.push({
+          name: productData.name,
+          status: "SUCCESS"
+        });
+      });
+    } catch (err) {
+      results.push({
+        name: productData.name,
+        status: "FAILED",
+        reason: err.message
+      });
+    }
+  }
+
+  return results;
 }
 
 
+}
 
 module.exports = ProductService;

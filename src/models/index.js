@@ -19,6 +19,8 @@ db.OrderItem = require("./order_item.model")(sequelize, db.Sequelize);
 db.Payment = require("./payment.model")(sequelize, db.Sequelize);
 db.Inventory = require("./inventory.model")(sequelize, db.Sequelize);
 // Load associations
+db.Permission = require("./permission.model")(sequelize, db.Sequelize);
+db.RolePermission = require("./role_permission.model")(sequelize, db.Sequelize);
 
 require("./associations")(db);
 
