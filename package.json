@@ -9,6 +9,7 @@
     "bcrypt": "^5.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "ioredis": "^5.9.2",
     "joi": "^18.0.2",
     "joi-to-swagger": "^6.2.0",
     "jsonwebtoken": "^9.0.2",

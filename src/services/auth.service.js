@@ -24,6 +24,7 @@ class AuthService {
   }
 
   static async login({ email, password }) {
+
     const user = await dbUtils.findOne(User, { email });
     if (!user) throw new Error("INVALID_CREDENTIALS");
 
@@ -31,7 +32,7 @@ class AuthService {
     if (!ok) throw new Error("INVALID_CREDENTIALS");
 
     return {
-      token: generateToken({ userId: user.id, email: user.email })
+      token: await generateToken({ userId: user.id, email: user.email })
     };
   }
 }

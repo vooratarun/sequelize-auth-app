@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const redis = require("../config/redis");
 
-module.exports = (req, res, next) => {
+module.exports = async(req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ message: "Authorization header missing" });
@@ -13,7 +14,21 @@ module.exports = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // { userId, email }
+    const { userId, jti } = decoded;
+
+    const session = await redis.get(`auth:user:${userId}`);
+    if (!session) {
+      return res.status(401).json({ message: "SESSION_EXPIRED" });
+    }
+
+    const { jti: activeJti } = JSON.parse(session);
+
+    if (jti !== activeJti) {
+      return res.status(401).json({ message: "SESSION_REVOKED" });
+    }
+
+    req.user = { userId };
+
     next();
   } catch (err) {
     return res.status(401).json({ message: "Invalid or expired token" });
