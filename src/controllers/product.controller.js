@@ -1,4 +1,5 @@
 const ProductService = require("../services/product.service");
+const catchAsync = require("../utils/catchAsync");
 
 exports.browseProducts = async (req, res) => {
   try {
@@ -38,9 +39,8 @@ exports.deleteProduct = async (req, res) => {
   res.status(204).send();
 };
 
-exports.bulkCreateProducts = async (req, res) => {
+exports.bulkCreateProducts = catchAsync(async (req, res) => {
   const result = await ProductService.bulkCreateProducts(req.body.products);
   res.status(201).json(result);
-};
-
+});
 

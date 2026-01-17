@@ -5,6 +5,9 @@ const dbUtils = require("../db/sequelize.utils");
 const { withTransaction } = require("../db/transaction");
 
 const User = db.User;
+const Event = require("../modelsmongo/events.model");
+
+
 
 class AuthService {
   static async signup({ email, password, name }) {
@@ -31,9 +34,15 @@ class AuthService {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) throw new Error("INVALID_CREDENTIALS");
 
-    return {
-      token: await generateToken({ userId: user.id, email: user.email })
-    };
+  
+      const token = await generateToken({ userId: user.id, email: user.email });
+      await Event.create({
+          userId: user.id,
+          type: "LOGIN",
+          payload: { email: user.email },
+        }); 
+      return {token};
+    
   }
 }
 

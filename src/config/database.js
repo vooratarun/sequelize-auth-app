@@ -28,4 +28,14 @@ const sequelize = new Sequelize(
   }
 );
 
-module.exports = sequelize;
+const connectSequelize = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ Sequelize connected");
+  } catch (err) {
+    console.error("❌ Sequelize connection failed", err);
+    process.exit(1);
+  }
+};
+
+module.exports = {sequelize, connectSequelize};
