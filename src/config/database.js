@@ -13,6 +13,7 @@ const prettyLogger = (sql, time) => {
     console.log("\n🟨 RAW SQL\n", sql);
   }
 };
+
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,

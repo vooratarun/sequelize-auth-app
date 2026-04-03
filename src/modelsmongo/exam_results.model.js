@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+
+
 const ExamResultSchema = new mongoose.Schema(
   {
     examId: mongoose.Schema.Types.ObjectId,

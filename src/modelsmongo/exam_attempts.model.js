@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+
+
 const ExamAttemptSchema = new mongoose.Schema(
   {
     examId: {

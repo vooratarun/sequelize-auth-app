@@ -58,6 +58,17 @@ class RoleService {
 
     await role.addUsers(newUsers, { transaction });
 
+    // await UserRole.bulkCreate(
+    //     newUserIds.map(userId => ({
+    //       roleId,
+    //       userId
+    //     })),
+    //     {
+    //       transaction,
+    //       ignoreDuplicates: true
+    //     }
+    // );
+
     return {
       roleId,
       assignedUsers: newUsers.length

@@ -6,9 +6,6 @@ const { withTransaction } = require("../db/transaction");
 
 const User = db.User;
 const Event = require("../modelsmongo/events.model");
-
-
-
 class AuthService {
   static async signup({ email, password, name }) {
     return withTransaction(async (tx) => {
@@ -26,6 +23,32 @@ class AuthService {
     });
   }
 
+  static async signupNew({ email, password, name }) {
+    const tx = await db.sequelize.transaction();
+
+    try {
+      email = email.toLowerCase().trim();
+      const hashed = await bcrypt.hash(password, 10);
+
+      const user = await User.create(
+          { email, password: hashed, name },
+          { transaction: tx }
+      );
+
+      await tx.commit();
+      return { id: user.id, email: user.email };
+
+    } catch (err) {
+      await tx.rollback();
+
+      if (err.name === "SequelizeUniqueConstraintError") {
+        throw new Error("EMAIL_ALREADY_EXISTS");
+      }
+
+      throw err;
+    }
+  }
+
   static async login({ email, password }) {
 
     const user = await dbUtils.findOne(User, { email });
@@ -34,15 +57,15 @@ class AuthService {
     const ok = await bcrypt.compare(password, user.password);
     if (!ok) throw new Error("INVALID_CREDENTIALS");
 
-  
+
       const token = await generateToken({ userId: user.id, email: user.email });
       await Event.create({
           userId: user.id,
           type: "LOGIN",
           payload: { email: user.email },
-        }); 
+        });
       return {token};
-    
+
   }
 }
 

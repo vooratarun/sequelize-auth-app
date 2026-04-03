@@ -6,8 +6,6 @@ const create = (Model, data, options = {}) =>
 const findOne = (Model, where, options = {}) =>
   Model.findOne({ where, ...options });
 
-
-
 const findById = (Model, id, options = {}) =>
   Model.findByPk(id, options);
 

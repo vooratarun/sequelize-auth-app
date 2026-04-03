@@ -1,6 +1,8 @@
 require("dotenv").config();
 
-console.log("Database Host:", process.env.DB_HOST);
+console.log(" Environment:", process.env.NODE_ENV);
+
+
 const app = require("./app");
 const db = require("./models");
 const { connectSequelize } = require("./config/database");

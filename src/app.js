@@ -10,12 +10,13 @@ const userRoutes = require("./routes/user.routes");
 const roleRoutes = require("./routes/role.routes");
 const productRoutes = require("./routes/product.routes");
 const examRoutes = require("./routes/exam.routes");
-
+const questionRoutes = require("./routes/question.routes");
+const batchRoutes = require("./routes/batch.routes");
 
 // const swaggerSpec = require("./config/swagger");
 const swaggerSpec = require("./swagger/openapi.js");
 
-    
+
 const app = express();
 
 
@@ -27,7 +28,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/exams", examRoutes);
-
+app.use("/api/questions", questionRoutes);
+app.use("/api/batches", batchRoutes);
 
 /**
  * Swagger

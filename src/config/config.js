@@ -1,5 +1,11 @@
 require("dotenv").config();
 
+const env = process.env.NODE_ENV || "development";
+
+console.log("Environment:", env);
+
+console.log("DB:", process.env.DB_NAME, "HOST:", process.env.DB_HOST);
+
 module.exports = {
   development: {
     username: process.env.DB_USER,

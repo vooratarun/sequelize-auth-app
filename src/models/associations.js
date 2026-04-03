@@ -1,8 +1,19 @@
 module.exports = (db) => {
-  const { User, Role, UserRole, 
+  const { User, Role, UserRole,
          Address, Product, Category, ProductCategory,
     Cart, CartItem, Order, OrderItem, Payment, Inventory,
-    RolePermission, Permission
+    RolePermission, Permission,
+    Batch,
+    SubBatch,
+    Class,
+    AcademicYear,
+    Student,
+    MarkingScheme,
+    Item,
+    Test,
+    TestItem,
+    Delivery,
+    DeliveryExecution
   } = db;
 
   // User ↔ Role (Many-to-Many)
@@ -44,4 +55,43 @@ module.exports = (db) => {
 
   Role.belongsToMany(Permission, { through: RolePermission });
   Permission.belongsToMany(Role, { through: RolePermission });
+
+
+  Batch.hasMany(Student, { foreignKey: "batch_id" });
+  SubBatch.hasMany(Student, { foreignKey: "subbatch_id" });
+  Class.hasMany(Student, { foreignKey: "class_id" });
+  AcademicYear.hasMany(Student, { foreignKey: "year_id" });
+
+  Student.belongsTo(Batch, { foreignKey: "batch_id" });
+  Student.belongsTo(SubBatch, { foreignKey: "subbatch_id" });
+  Student.belongsTo(Class, { foreignKey: "class_id" });
+  Student.belongsTo(AcademicYear, { foreignKey: "year_id" });
+
+  // Marking Scheme
+  MarkingScheme.hasMany(Item, { foreignKey: "mark_scheme_id" });
+  Item.belongsTo(MarkingScheme, { foreignKey: "mark_scheme_id" });
+
+  // Test ↔ Item (M:N)
+  Test.belongsToMany(Item, {
+    through: TestItem,
+    foreignKey: "test_id",
+    otherKey: "item_id"
+  });
+
+  Item.belongsToMany(Test, {
+    through: TestItem,
+    foreignKey: "item_id",
+    otherKey: "test_id"
+  });
+
+  // Test → Delivery
+  Test.hasMany(Delivery, { foreignKey: "test_id" });
+  Delivery.belongsTo(Test, { foreignKey: "test_id" });
+
+  // Delivery → Execution
+  Delivery.hasMany(DeliveryExecution, { foreignKey: "delivery_id" });
+  DeliveryExecution.belongsTo(Delivery, { foreignKey: "delivery_id" });
+
+  Student.hasMany(DeliveryExecution, { foreignKey: "student_id" });
+  DeliveryExecution.belongsTo(Student, { foreignKey: "student_id" });
 };
